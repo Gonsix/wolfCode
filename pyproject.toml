@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "wolfcode"
+version = "0.1.0"
+description = ""
+authors = ["Shingo Morimoto <shingo@wolfssl.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+openai = "^1.13.3"
+langchain = "^0.1.11"
+langchain-community = "^0.0.27"
+langchain-openai = "^0.0.8"
+gitpython = "^3.1.42"
+dynaconf = "^3.2.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
