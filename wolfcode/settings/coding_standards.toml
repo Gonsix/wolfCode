@@ -1,0 +1,106 @@
+rules = [
+    "Don’t change external facing APIs.  If you need to add parameters to an existing API like f(a) to f(a, b) create f_ex(a,b) instead.  f(a) can call f_ex(a, null) to leave a single internal implementation.",
+
+    "If a function uses more than 100 bytes of stack follow the WOLFSSL_SMALL_STACK pattern and dynamically allocate variables to reduce stack use to less than 100 bytes per function.",
+    
+    "All functions should return a value.  No void function returns.  If a return is later added propagating the error checking upstream can become very complicated.",
+
+    "No recursion, prefer iterative solutions.  Less stack use.",
+
+    "No C standard library assumption, should be able to build without.  Or at least add new X macros, e.g., XSTRLEN()",
+
+    "At least a one line comment for each function, meaning of return value",
+
+    "Use ForceZero() to zeroize private keys or sensitive data. In some cases the compiler may “optimize” away memset at end of function if stack variable is used. The ForceZero ensures the data is zeroized.",
+
+    "Prefer constant time solutions",
+
+    "Declare variables at top of function unless only used in block scope",
+
+    """Put struct members in descending order of size, biggest first. 
+    Use of bit-fields is okay. Make sure it is unsigned and at the end of the structure. 
+    Avoid requiring packed structures.""",
+
+    "Check every return code",
+
+    "Don’t leak memory or resources, when you allocate something make sure there’s a clear way to release",
+
+    "Follow the patterns in existence" , 
+
+    "Avoid using hard coded numeric values. When possible use sizeof() or define / enum. Use sizeof() like a function.",
+
+    "A define section should be either zero indent or back 4 spaces from the section it is in.",
+
+    "If creating stub function for the compatibility layer  use the macro WOLFSSL_STUB.",
+
+    "Checking for null pointers. Use the `ptr != NULL`", 
+
+    "Avoid casting between diff size types. It is okay to use size_t to identify a pointer size.",
+
+    "Pointer parameters not modified within a function should declare const. Example: `const void *ptr`.",
+
+    "We use byte, word16, word32 (not the stdint types uint32_t).",
+
+    "Cast XMALLOC. byte* var = (byte*)XMALLOC(size, NULL, DYN);", 
+
+    "4 space tabs (not tabs)",
+
+    "80 characters max line length",
+
+    "Function names like this: DoBumpAgain(), not allowed snake case(e.g., do_bump_again).",
+
+    "Variable name like this: counter, buffLen", 
+
+    "Constant names like this:  MAX_SIZE",
+
+    "No types in names, the compiler is smart, so don’t do: aLongPtr, aCharArray",
+
+    "Build without warnings being thrown",
+
+    "Comment must be written like this:  “/* ... */”. ",
+
+    """
+K&R {} for if statement like this:
+
+if (true) {
+    do something;
+    more;
+}
+else {
+    Other stuff;
+}
+    """,
+
+    
+    """
+Though function {} always like this (they are different):
+
+void DoBumpAgain(void)
+{
+
+}
+    """,
+
+    "Avoid gotos unless absolutely necessary",
+
+    "Keep functions to 100 lines unless necessary",
+
+    """
+Pattern matching like this:
+switch (val) {
+    case VAL1:
+        Do something;
+
+        FALL_THROUGH
+    case VAL2:
+       Do something else;
+       break;
+
+    default:
+}
+    """
+
+
+
+
+]

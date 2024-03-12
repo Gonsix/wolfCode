@@ -13,6 +13,7 @@ langchain-community = "^0.0.27"
 langchain-openai = "^0.0.8"
 gitpython = "^3.1.42"
 dynaconf = "^3.2.4"
+rich = "^13.7.1"
 
 
 [build-system]

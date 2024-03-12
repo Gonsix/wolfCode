@@ -1,8 +1,8 @@
 from os.path import abspath, dirname
 
 
-# 末尾の "/pr_review"を削除. これでプロジェクトのルートへの正しいパスとなる。(pyproject.tomlがあるディレクトリ)
-def remove_trailing_path(original_path: str, trailing_path: str = "/pr_review") -> str:
+# 末尾の "/wolfcode"を削除. これでプロジェクトのルートへの正しいパスとなる。(pyproject.tomlがあるディレクトリ)
+def remove_trailing_path(original_path: str, trailing_path: str = "/wolfcode") -> str:
     if original_path.endswith(trailing_path):
         # 末尾のパターンを削除
         return original_path[:-len(trailing_path)]
@@ -13,5 +13,5 @@ def remove_trailing_path(original_path: str, trailing_path: str = "/pr_review") 
 here = dirname(abspath(__file__))
 
 # PR-Reviewプロジェクトのルートディレクトリへの相対パス 
-# 他のファイルから from pr_review.definitions import ROOT_DIRでアクセスできる
+# 他のファイルから from wolfcode.definitions import ROOT_DIRでアクセスできる
 ROOT_DIR = remove_trailing_path(here) 
