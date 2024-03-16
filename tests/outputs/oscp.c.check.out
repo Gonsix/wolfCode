@@ -1,0 +1,127 @@
+Title: Function names like this: DoBumpAgain()
+Valid: False
+Reason: Function names are not following the camel case naming convention as required.
+Suggestion: Rename the function to 'InitOcsp' to follow the camel case naming convention.
+  in  /Users/qwertyrockson/wolfssl/src/ocsp.c
+From:
+  53 int InitOCSP(WOLFSSL_OCSP* ocsp, WOLFSSL_CERT_MANAGER* cm)
+Into:
+     int InitOcsp(WOLFSSL_OCSP* ocsp, WOLFSSL_CERT_MANAGER* cm)
+
+
+Title: Variable name like this: counter, buffLen
+Valid: False
+Reason: Variable names are not following the lower camel case naming convention as
+required.
+Suggestion: Rename the parameters to 'ocspEntry' and 'ocspRequest' to follow the lower
+camel case naming convention.
+  in  /Users/qwertyrockson/wolfssl/src/ocsp.c
+From:
+  68 int InitOcspEntry(OcspEntry* entry, OcspRequest* request)
+Into:
+     int InitOcspEntry(OcspEntry* ocspEntry, OcspRequest* ocspRequest)
+
+
+Title: 80 characters max line length
+Valid: False
+Reason: Some lines exceed the maximum of 80 characters.
+Suggestion: Break the line into two to ensure that no line exceeds 80 characters.
+  in  /Users/qwertyrockson/wolfssl/src/ocsp.c
+From:
+  145 int CheckCertOCSP_ex(WOLFSSL_OCSP* ocsp, DecodedCert* cert, WOLFSSL* ssl)
+Into:
+      int CheckCertOCSP_ex(WOLFSSL_OCSP* ocsp, DecodedCert* cert,
+                         WOLFSSL* ssl)
+
+
+Title: No types in names
+Valid: True
+Reason: The code does not include type information in the names.
+
+Title: No C standard library assumption
+Valid: True
+Reason: The code does not assume the presence of the C standard library.
+
+Title: Use ForceZero() to zeroize private keys or sensitive data
+Valid: True
+Reason: The code uses ForceZero() to zeroize sensitive data as required.
+
+Title: Check every return code
+Valid: True
+Reason: The code checks every return code from function calls.
+
+Title: Don’t leak memory or resources
+Valid: True
+Reason: The code properly releases memory and resources.
+
+Title: Avoid using hard coded numeric values
+Valid: True
+Reason: The code avoids hard coded numeric values and uses sizeof() or define/enum instead.
+
+Title: Declare variables at top of function unless only used in block scope
+Valid: True
+Reason: Variables are declared at the top of functions unless they are only used in a block
+scope.
+
+Title: No recursion, prefer iterative solutions
+Valid: True
+Reason: The code does not use recursion and prefers iterative solutions.
+
+Title: All functions should return a value. No void function returns
+Valid: True
+Reason: All functions in the code return a value and there are no void function returns.
+
+Title: Prefer constant time solutions
+Valid: True
+Reason: The code prefers constant time solutions where applicable.
+
+Title: Put struct members in descending order of size, biggest first
+Valid: True
+Reason: Struct members appear to be in descending order of size, with the biggest first.
+
+Title: Avoid casting between diff size types
+Valid: True
+Reason: The code avoids casting between different size types.
+
+Title: Pointer parameters not modified within a function should declare const
+Valid: True
+Reason: Pointer parameters not modified within functions are declared as const.
+
+Title: Cast XMALLOC
+Valid: True
+Reason: The code correctly casts the result of XMALLOC.
+
+Title: 4 space tabs (not tabs)
+Valid: True
+Reason: The code uses 4 space tabs instead of tabs.
+
+Title: K&R {} for if statement
+Valid: True
+Reason: The code uses K&R style braces for if statements.
+
+Title: Function {} always like this
+Valid: True
+Reason: The code uses the correct style for function braces.
+
+Title: Avoid gotos unless absolutely necessary
+Valid: True
+Reason: The code avoids the use of gotos.
+
+Title: Keep functions to 100 lines unless necessary
+Valid: True
+Reason: Functions are kept to 100 lines or less unless necessary.
+
+Title: Pattern matching like this
+Valid: True
+Reason: The code follows the pattern matching style provided.
+
+Title: Comment must be written like this
+Valid: True
+Reason: Comments are written using the correct style.
+
+╭─ Summary ───────────────────────────────────────────────────────────────────────────────╮
+│ The code mostly adheres to the wolfSSL coding standards. However, there are issues with │
+│ function and variable naming conventions not following camel case, and some lines       │
+│ exceed the maximum length of 80 characters. These issues have been highlighted with     │
+│ suggestions for improvement.                                                            │
+╰─────────────────────────────────────────────────────────────────────────────────────────╯

@@ -1,0 +1,152 @@
+Title: Potential resource leak in wc_MakeDsaKey
+Type: Resource leak Bug
+Suggestion: The allocated memory for 'cBuf' is not freed if an error occurs before the XFREE call at the end of the function. To prevent a
+memory leak, 'cBuf' should be freed in each error handling block where 'err' is not MP_OKAY.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  149 int wc_MakeDsaKey(WC_RNG *rng, DsaKey *dsa)
+  150 {
+  151     ...
+  152     cBuf = (byte*)XMALLOC((size_t)cSz, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  153     ...
+  154     if (err != MP_OKAY) {
+  155         ...
+  156     }
+  157     ...
+  158     XFREE(cBuf, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  159     ...
+  160 }
+Into:
+      int wc_MakeDsaKey(WC_RNG *rng, DsaKey *dsa)
+      {
+          ...
+          cBuf = (byte*)XMALLOC((size_t)cSz, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          ...
+          if (err != MP_OKAY) {
+              XFREE(cBuf, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+              ...
+          }
+          ...
+          XFREE(cBuf, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          ...
+      }
+
+
+Title: Potential resource leak in wc_MakeDsaParameters
+Type: Resource leak Bug
+Suggestion: The allocated memory for 'buf' is not freed if an error occurs before the XFREE call at the end of the function. To prevent a
+memory leak, 'buf' should be freed in each error handling block where 'err' is not MP_OKAY.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  251 int wc_MakeDsaParameters(WC_RNG *rng, int modulus_size, DsaKey *dsa)
+  252 {
+  253     ...
+  254     buf = (unsigned char *)XMALLOC((size_t)(msize - qsize),
+  255                                    dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  256     ...
+  257     if (err != MP_OKAY) {
+  258         ...
+  259     }
+  260     ...
+  261     XFREE(buf, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  262     ...
+  263 }
+Into:
+      int wc_MakeDsaParameters(WC_RNG *rng, int modulus_size, DsaKey *dsa)
+      {
+          ...
+          buf = (unsigned char *)XMALLOC((size_t)(msize - qsize),
+                                         dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          ...
+          if (err != MP_OKAY) {
+              XFREE(buf, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+              ...
+          }
+          ...
+          XFREE(buf, dsa->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          ...
+      }
+
+
+Title: Potential resource leak in wc_DsaSign
+Type: Resource leak Bug
+Suggestion: The allocated memory for 'k' and other variables is not freed if an error occurs before the XFREE call at the end of the
+function. To prevent a memory leak, all allocated resources should be freed in an 'exit' label, which is called in each error handling
+block where 'ret' is set.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  650 int wc_DsaSign(const byte* digest, byte* out, DsaKey* key, WC_RNG* rng)
+  651 {
+  652     ...
+  653     k = (mp_int *)XMALLOC(sizeof *k, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  654     ...
+  655     if (k == NULL) {
+  656         ret = MEMORY_E;
+  657         break;
+  658     }
+  659     ...
+  660     XFREE(k, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  661     ...
+  662 }
+Into:
+      int wc_DsaSign(const byte* digest, byte* out, DsaKey* key, WC_RNG* rng)
+      {
+          ...
+          k = (mp_int *)XMALLOC(sizeof *k, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          ...
+          if (k == NULL) {
+              ret = MEMORY_E;
+              goto exit;
+          }
+          ...
+      exit:
+          if (k) {
+              XFREE(k, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          }
+          ...
+      }
+
+
+Title: Potential resource leak in wc_DsaVerify
+Type: Resource leak Bug
+Suggestion: The allocated memory for 'w' and other variables is not freed if an error occurs before the XFREE call at the end of the
+function. To prevent a memory leak, all allocated resources should be freed in an 'exit' label, which is called in each error handling
+block where 'ret' is set.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  985 int wc_DsaVerify(const byte* digest, const byte* sig, DsaKey* key, int* answer)
+  986 {
+  987     ...
+  988     w = (mp_int *)XMALLOC(sizeof *w, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  989     ...
+  990     if (w == NULL) {
+  991         ret = MEMORY_E;
+  992         break;
+  993     }
+  994     ...
+  995     XFREE(w, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+  996     ...
+  997 }
+Into:
+      int wc_DsaVerify(const byte* digest, const byte* sig, DsaKey* key, int* answer)
+      {
+          ...
+          w = (mp_int *)XMALLOC(sizeof *w, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          ...
+          if (w == NULL) {
+              ret = MEMORY_E;
+              goto exit;
+          }
+          ...
+      exit:
+          if (w) {
+              XFREE(w, key->heap, DYNAMIC_TYPE_TMP_BUFFER);
+          }
+          ...
+      }
+
+
+Summary
+The code contains several potential resource leaks where dynamically allocated memory is not freed in error handling paths. It is
+recommended to use a consistent error handling strategy, such as 'goto exit;' where all resources are freed before returning from the
+function in case of an error.

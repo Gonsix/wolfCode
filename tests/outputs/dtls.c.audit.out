@@ -1,0 +1,101 @@
+{'files': [PosixPath('/Users/qwertyrockson/wolfssl/src/dtls.c')], 'show_config_path': False, 'config_file': PosixPath('wolfcode/settings/audit.toml')}
+Title: Memory leak in DtlsCidNew function
+Type: Resource leak Bug
+Suggestion: The function DtlsCidNew does not check if the 'cid' pointer is NULL or if the 'size' is greater than 0 before copying memory. This could lead to a
+memory leak if 'cid' is NULL or 'size' is 0. The improved code adds a check to ensure 'cid' is not NULL and 'size' is greater than 0 before performing the
+memory copy.
+  in  /Users/qwertyrockson/wolfssl/src/dtls.c
+From:
+  1043 ConnectionID* DtlsCidNew(const byte* cid, byte size, void* heap)
+  1044 {
+  1045     ConnectionID* ret;
+  1046
+  1047     ret = (ConnectionID*)XMALLOC(sizeof(ConnectionID) + size, heap,
+  1048         DYNAMIC_TYPE_TLSX);
+  1049     if (ret == NULL)
+  1050         return NULL;
+  1051
+  1052     ret->length = size;
+  1053     XMEMCPY(ret->id, cid, size);
+  1054
+  1055     return ret;
+  1056 }
+Into:
+       ConnectionID* DtlsCidNew(const byte* cid, byte size, void* heap)
+       {
+           ConnectionID* ret;
+
+           ret = (ConnectionID*)XMALLOC(sizeof(ConnectionID) + size, heap,
+               DYNAMIC_TYPE_TLSX);
+           if (ret == NULL)
+               return NULL;
+
+           ret->length = size;
+           if (cid != NULL && size > 0) {
+               XMEMCPY(ret->id, cid, size);
+           }
+
+           return ret;
+       }
+
+
+Title: Potential buffer overflow in DtlsCidGet function
+Type: Memory Bug
+Suggestion: The function DtlsCidGet does not check if the 'id->id' pointer is NULL before copying memory. This could lead to a buffer overflow if 'id->id' is
+NULL. The improved code adds a check to ensure 'id->id' is not NULL before performing the memory copy.
+  in  /Users/qwertyrockson/wolfssl/src/dtls.c
+From:
+  1085 int DtlsCidGet(WOLFSSL* ssl, unsigned char* buf, int bufferSz, int rx)
+  1086 {
+  1087     ConnectionID* id;
+  1088     CIDInfo* info;
+  1089
+  1090     if (ssl == NULL || buf == NULL)
+  1091         return BAD_FUNC_ARG;
+  1092
+  1093     info = DtlsCidGetInfo(ssl);
+  1094     if (info == NULL)
+  1095         return WOLFSSL_FAILURE;
+  1096
+  1097     id = rx ? info->rx : info->tx;
+  1098     if (id == NULL || id->length == 0)
+  1099         return WOLFSSL_SUCCESS;
+  1100
+  1101     if (id->length > bufferSz)
+  1102         return LENGTH_ERROR;
+  1103
+  1104     XMEMCPY(buf, id->id, id->length);
+  1105     return WOLFSSL_SUCCESS;
+  1106 }
+Into:
+       int DtlsCidGet(WOLFSSL* ssl, unsigned char* buf, int bufferSz, int rx)
+       {
+           ConnectionID* id;
+           CIDInfo* info;
+
+           if (ssl == NULL || buf == NULL)
+               return BAD_FUNC_ARG;
+
+           info = DtlsCidGetInfo(ssl);
+           if (info == NULL)
+               return WOLFSSL_FAILURE;
+
+           id = rx ? info->rx : info->tx;
+           if (id == NULL || id->length == 0)
+               return WOLFSSL_SUCCESS;
+
+           if (id->length > bufferSz)
+               return LENGTH_ERROR;
+
+           if (id->length > 0 && id->id != NULL) {
+               XMEMCPY(buf, id->id, id->length);
+           }
+           return WOLFSSL_SUCCESS;
+       }
+
+
+Summary
+The code review identified two potential bugs related to memory handling. The first is a resource leak in the DtlsCidNew function, where there is no check for
+NULL 'cid' or zero 'size' before copying memory, which could lead to a memory leak. The second is a potential buffer overflow in the DtlsCidGet function,
+where there is no check for NULL 'id->id' before copying memory, which could lead to a buffer overflow. Both issues have been addressed with improved code
+suggestions that add the necessary checks before performing memory operations.

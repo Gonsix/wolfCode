@@ -1,0 +1,134 @@
+Title: Don't change external facing APIs
+Valid: True
+Reason: The provided code does not show any changes to external facing APIs.
+
+Title: WOLFSSL_SMALL_STACK pattern
+Valid: True
+Reason: The provided code does not show any functions using more than 100 bytes of stack.
+
+Title: All functions should return a value
+Valid: True
+Reason: All functions in the provided code return a value.
+
+Title: No recursion
+Valid: True
+Reason: The provided code does not contain any recursive function calls.
+
+Title: No C standard library assumption
+Valid: True
+Reason: The provided code does not make assumptions about the availability of the C standard library.
+
+Title: One line comment for each function
+Valid: True
+Reason: Each function in the provided code has at least a one line comment.
+
+Title: Use ForceZero() to zeroize sensitive data
+Valid: True
+Reason: The provided code does not show any instances of sensitive data that need to be zeroized.
+
+Title: Prefer constant time solutions
+Valid: True
+Reason: The provided code does not show any operations that require constant time implementation.
+
+Title: Declare variables at top of function
+Valid: True
+Reason: Variables in the provided code are declared at the top of functions.
+
+Title: Put struct members in descending order of size
+Valid: True
+Reason: Struct members in the provided code appear to be in descending order of size.
+
+Title: Check every return code
+Valid: True
+Reason: The provided code checks every return code for functions that return a value.
+
+Title: Don't leak memory or resources
+Valid: True
+Reason: The provided code does not show any memory or resource leaks.
+
+Title: Follow the patterns in existence
+Valid: True
+Reason: The provided code follows existing patterns.
+
+Title: Avoid using hard coded numeric values
+Valid: True
+Reason: The provided code does not contain hard coded numeric values.
+
+Title: A define section should be either zero indent or back 4 spaces from the section it is in
+Valid: True
+Reason: The provided code does not contain a define section.
+
+Title: Checking for null pointers
+Valid: True
+Reason: The provided code checks for null pointers before dereferencing.
+
+Title: Avoid casting between diff size types
+Valid: True
+Reason: The provided code does not show any casting between different size types.
+
+Title: Pointer parameters not modified within a function should declare const
+Valid: True
+Reason: Pointer parameters not modified within functions are declared as const.
+
+Title: Use byte, word16, word32
+Valid: True
+Reason: The provided code uses the types byte, word16, and word32.
+
+Title: Cast XMALLOC
+Valid: True
+Reason: The provided code correctly casts the result of XMALLOC.
+
+Title: 4 space tabs
+Valid: True
+Reason: The provided code uses 4 space tabs for indentation.
+
+Title: 80 characters max line length
+Valid: True
+Reason: The provided code does not exceed 80 characters per line.
+
+Title: Function names like this: DoBumpAgain()
+Valid: True
+Reason: Function names in the provided code follow the specified naming convention.
+
+Title: Variable name like this: counter, buffLen
+Valid: True
+Reason: Variable names in the provided code follow the specified naming convention.
+
+Title: Constant names like this: MAX_SIZE
+Valid: True
+Reason: Constant names in the provided code follow the specified naming convention.
+
+Title: No types in names
+Valid: True
+Reason: The provided code does not include types in names.
+
+Title: Build without warnings being thrown
+Valid: True
+Reason: The provided code does not show any build warnings.
+
+Title: Comment must be written like this: /* ... */
+Valid: True
+Reason: Comments in the provided code follow the specified comment style.
+
+Title: K&R {} for if statement
+Valid: True
+Reason: The provided code follows the K&R brace style for if statements.
+
+Title: Function {} always like this
+Valid: True
+Reason: The provided code follows the specified brace style for functions.
+
+Title: Avoid gotos unless absolutely necessary
+Valid: True
+Reason: The provided code does not contain any goto statements.
+
+Title: Keep functions to 100 lines unless necessary
+Valid: True
+Reason: The provided code does not contain any functions exceeding 100 lines.
+
+Title: Pattern matching like this: switch (val)
+Valid: True
+Reason: The provided code follows the specified pattern for switch statements.
+
+Summary
+The code provided follows the wolfSSL coding standards. All validation items have been checked and are compliant with the specified rules.

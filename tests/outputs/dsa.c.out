@@ -1,0 +1,174 @@
+Title: No void function returns
+Valid: False
+Reason: The function 'wc_FreeDsaKey' at line 90 in 'dsa.c' is a void function and does not return a value.
+Suggestion: The function 'wc_FreeDsaKey' should not return a value as it is declared with a void return type.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+   90 void wc_FreeDsaKey(DsaKey* key)
+   91 {
+   92     if (key == NULL)
+   93         return;
+   94
+   95     if (key->type == DSA_PRIVATE)
+   96         mp_forcezero(&key->x);
+   97
+   98     mp_clear(&key->x);
+   99     mp_clear(&key->y);
+  100     mp_clear(&key->g);
+  101     mp_clear(&key->q);
+  102     mp_clear(&key->p);
+  103 }
+Into:
+     void wc_FreeDsaKey(DsaKey* key)
+     {
+         if (key == NULL)
+             return;
+
+         if (key->type == DSA_PRIVATE)
+             mp_forcezero(&key->x);
+
+         mp_clear(&key->x);
+         mp_clear(&key->y);
+         mp_clear(&key->g);
+         mp_clear(&key->q);
+         mp_clear(&key->p);
+     }
+
+
+Title: Check every return code
+Valid: False
+Reason: There are multiple instances where return codes from functions like 'mp_init_multi', 'mp_read_unsigned_bin', 'mp_exptmod_ex', etc.
+are not checked.
+Suggestion: Check the return code of 'mp_init_multi' and return an error code if it is not MP_OKAY.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  58 int wc_InitDsaKey(DsaKey* key)
+  59 {
+  60     if (key == NULL)
+  61         return BAD_FUNC_ARG;
+  62
+  63     key->type = -1;  /* haven't decided yet */
+  64     key->heap = NULL;
+  65
+  66     return mp_init_multi(
+  67         /* public  alloc parts */
+  68         &key->p,
+  69         &key->q,
+  70         &key->g,
+  71         &key->y,
+  72
+  73         /* private alloc parts */
+  74         &key->x,
+  75         NULL
+  76     );
+  77 }
+Into:
+     int wc_InitDsaKey(DsaKey* key)
+     {
+         int ret;
+         if (key == NULL)
+             return BAD_FUNC_ARG;
+
+         key->type = -1;  /* haven't decided yet */
+         key->heap = NULL;
+
+         ret = mp_init_multi(
+             /* public  alloc parts */
+             &key->p,
+             &key->q,
+             &key->g,
+             &key->y,
+
+             /* private alloc parts */
+             &key->x,
+             NULL
+         );
+         if (ret != MP_OKAY) {
+             return ret;
+         }
+         return 0;
+     }
+
+
+Title: Use ForceZero() to zeroize private keys or sensitive data
+Valid: True
+Reason: The function 'wc_FreeDsaKey' correctly uses 'mp_forcezero' to zeroize the private key at line 96.
+
+Title: Declare variables at top of function unless only used in block scope
+Valid: True
+Reason: Variables are declared at the top of functions throughout the provided code.
+
+Title: Avoid using hard coded numeric values
+Valid: False
+Reason: Hardcoded numeric values are used in several places, such as 'mp_add_d(&dsa->g, 1, &dsa->g);' at line 371.
+Suggestion: Replace the hardcoded numeric value with a defined constant.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  371 err = mp_add_d(&dsa->g, 1, &dsa->g);
+Into:
+      #define DSA_INCREMENT 1
+      ...
+      err = mp_add_d(&dsa->g, DSA_INCREMENT, &dsa->g);
+
+
+Title: 80 characters max line length
+Valid: False
+Reason: Several lines exceed the 80 character limit, such as the line at 650.
+Suggestion: Break long lines to adhere to the 80 character limit.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  650 int wc_DsaSign(const byte* digest, byte* out, DsaKey* key, WC_RNG* rng)
+Into:
+      int wc_DsaSign(const byte* digest, byte* out, DsaKey* key,
+                    WC_RNG* rng)
+
+
+Title: Function names like this: DoBumpAgain()
+Valid: True
+Reason: Function names follow the camel case naming convention as required.
+
+Title: Variable name like this: counter, buffLen
+Valid: True
+Reason: Variable names follow the lower camel case naming convention as required.
+
+Title: Constant names like this: MAX_SIZE
+Valid: True
+Reason: Constant names follow the upper case naming convention as required.
+
+Title: No types in names
+Valid: True
+Reason: Variable names do not include type information in their names.
+
+Title: Build without warnings being thrown
+Valid: None
+Reason: The provided code does not include compiler output to determine if warnings are thrown.
+
+Title: Comment must be written like this: /* ... */
+Valid: True
+Reason: Comments use the correct /* ... */ style.
+
+Title: K&R {} for if statement
+Valid: True
+Reason: The if statements follow the K&R brace style as required.
+
+Title: Avoid gotos unless absolutely necessary
+Valid: True
+Reason: The code does not contain any 'goto' statements.
+
+Title: Keep functions to 100 lines unless necessary
+Valid: False
+Reason: Several functions exceed 100 lines, such as 'wc_MakeDsaKey' starting at line 149.
+Suggestion: Refactor 'wc_MakeDsaKey' into smaller functions to keep it under 100 lines.
+  in  /Users/qwertyrockson/wolfssl/wolfcrypt/src/dsa.c
+From:
+  149 int wc_MakeDsaKey(WC_RNG *rng, DsaKey *dsa)
+Into:
+      int wc_MakeDsaKey(WC_RNG *rng, DsaKey *dsa)
+      {
+          // Refactored code here
+      }
+
+
+Title: Pattern matching like this: switch (val)
+Valid: True
+Reason: The code does not contain any 'switch' statements to validate against the pattern.

@@ -1,0 +1,80 @@
+Title: Potential buffer overflow in quic_record_append
+Type: Memory Bug
+Suggestion: Ensure that the length of data being copied does not exceed the buffer capacity to prevent buffer overflow.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  152 XMEMCPY(qr->data + qr->end, data, len);
+Into:
+      if (qr->end + len <= qr->capacity) {
+          XMEMCPY(qr->data + qr->end, data, len);
+      } else {
+          /* Handle error: buffer overflow */
+      }
+
+
+Title: Potential null pointer dereference in quic_record_transfer
+Type: Logic Bug
+Suggestion: Check if 'ssl->quic.input_head' is not NULL before calling 'quic_record_transfer' to avoid null pointer dereference.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  763 n = quic_record_transfer(ssl->quic.input_head, buf, sz);
+Into:
+      if (ssl->quic.input_head != NULL) {
+          n = quic_record_transfer(ssl->quic.input_head, buf, sz);
+      }
+
+
+Title: Potential null pointer dereference in wolfSSL_quic_send_internal
+Type: Logic Bug
+Suggestion: Check if 'ssl->quic.method' and 'ssl->quic.method->add_handshake_data' are not NULL before calling 'add_handshake_data' to avoid null pointer
+dereference.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  817 aret = ssl->quic.method->add_handshake_data(ssl, ssl->quic.output_rec_level, (const uint8_t*)output, len);
+Into:
+      if (ssl->quic.method && ssl->quic.method->add_handshake_data) {
+          aret = ssl->quic.method->add_handshake_data(ssl, ssl->quic.output_rec_level, (const uint8_t*)output, len);
+      } else {
+          /* Handle error: null pointer dereference */
+      }
+
+
+Title: Potential memory leak in quic_record_make
+Type: Resource leak Bug
+Suggestion: Check if memory allocation for 'qr' is successful before proceeding to use it to avoid memory leak in case of allocation failure.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  77 qr = (QuicRecord*)XMALLOC(sizeof(*qr), ssl->heap, DYNAMIC_TYPE_TMP_BUFFER);
+Into:
+     if (qr) {
+         memset(qr, 0, sizeof(*qr));
+         qr->level = level;
+         /* ... existing code ... */
+     } else {
+         /* Handle error: memory allocation failed */
+     }
+
+
+Title: Potential memory leak in QuicTransportParam_new
+Type: Resource leak Bug
+Suggestion: Check if memory allocation for 'tp' is successful before proceeding to use it to avoid memory leak in case of allocation failure.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  218 tp = (QuicTransportParam*)XMALLOC(sizeof(*tp), heap, DYNAMIC_TYPE_TLSX);
+Into:
+      if (tp) {
+          tp->data = (uint8_t*)XMALLOC(len, heap, DYNAMIC_TYPE_TLSX);
+          if (!tp->data) {
+              XFREE(tp, heap, DYNAMIC_TYPE_TLSX);
+              return NULL;
+          }
+          /* ... existing code ... */
+      } else {
+          /* Handle error: memory allocation failed */
+      }
+
+
+Summary
+The code review identified several potential issues, including a buffer overflow in 'quic_record_append', null pointer dereferences in 'quic_record_transfer'
+and 'wolfSSL_quic_send_internal', and memory leaks in 'quic_record_make' and 'QuicTransportParam_new'. These issues should be addressed to prevent crashes,
+undefined behavior, and memory leaks.

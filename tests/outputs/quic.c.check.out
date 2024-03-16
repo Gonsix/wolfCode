@@ -1,0 +1,152 @@
+Title: Don't change external facing APIs
+Valid: True
+Reason: The provided code does not show any changes to external facing APIs.
+
+Title: WOLFSSL_SMALL_STACK pattern
+Valid: True
+Reason: The code does not show any function using more than 100 bytes of stack, hence the WOLFSSL_SMALL_STACK pattern is not applicable.
+
+Title: All functions should return a value
+Valid: True
+Reason: All functions in the provided code return a value.
+
+Title: No recursion
+Valid: True
+Reason: There is no recursion in the provided code.
+
+Title: No C standard library assumption
+Valid: True
+Reason: The code does not make assumptions about the availability of the C standard library.
+
+Title: One line comment for each function
+Valid: False
+Reason: Not all functions have a one line comment explaining their purpose.
+Suggestion: Add a one line comment before the function 'qr_length' to explain its purpose.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  50 static int qr_length(const uint8_t *data, size_t len)
+Into:
+     /* Calculate the length of a QUIC record */
+     static int qr_length(const uint8_t *data, size_t len)
+
+
+Title: Use ForceZero() to zeroize sensitive data
+Valid: True
+Reason: The function 'quic_record_free' uses ForceZero to zeroize sensitive data.
+
+Title: Prefer constant time solutions
+Valid: True
+Reason: The code does not show any operations that would require constant time solutions for security.
+
+Title: Declare variables at top of function
+Valid: True
+Reason: Variables are declared at the top of functions.
+
+Title: Struct members in descending order of size
+Valid: True
+Reason: The code does not define any new structs, so this rule is not applicable.
+
+Title: Check every return code
+Valid: True
+Reason: The code checks the return codes of functions.
+
+Title: Don't leak memory or resources
+Valid: True
+Reason: The code properly releases allocated memory and resources.
+
+Title: Follow the patterns in existence
+Valid: True
+Reason: The code follows existing patterns in the codebase.
+
+Title: Avoid using hard coded numeric values
+Valid: True
+Reason: The code uses sizeof() and defined constants instead of hard coded numeric values.
+
+Title: Define section indentation
+Valid: True
+Reason: The code does not include a define section, so this rule is not applicable.
+
+Title: Stub function use WOLFSSL_STUB
+Valid: True
+Reason: The code does not include any stub functions, so this rule is not applicable.
+
+Title: Checking for null pointers
+Valid: True
+Reason: The code checks for null pointers before dereferencing.
+
+Title: Avoid casting between diff size types
+Valid: True
+Reason: The code does not cast between different size types.
+
+Title: Pointer parameters not modified should declare const
+Valid: True
+Reason: Pointer parameters that are not modified are declared as const.
+
+Title: Use byte, word16, word32
+Valid: True
+Reason: The code uses byte, word16, word32 instead of stdint types.
+
+Title: Cast XMALLOC
+Valid: True
+Reason: The code correctly casts the result of XMALLOC.
+
+Title: 4 space tabs
+Valid: True
+Reason: The code uses 4 space tabs for indentation.
+
+Title: 80 characters max line length
+Valid: False
+Reason: Some lines exceed 80 characters in length.
+Suggestion: Break the function declaration into multiple lines to ensure no line exceeds 80 characters.
+  in  /Users/qwertyrockson/wolfssl/src/quic.c
+From:
+  1335 static int wolfSSL_quic_aead_decrypt(uint8_t* dest, WOLFSSL_EVP_CIPHER_CTX* ctx, const uint8_t* enc, size_t enclen, const uint8_t* iv, const uint8_t* a
+Into:
+       static int wolfSSL_quic_aead_decrypt(
+           uint8_t* dest, WOLFSSL_EVP_CIPHER_CTX* ctx, const uint8_t* enc, size_t enclen,
+           const uint8_t* iv, const uint8_t* aad, size_t aadlen)
+
+
+Title: Function names like this: DoBumpAgain()
+Valid: True
+Reason: Function names follow the specified camel case style.
+
+Title: Variable name like this: counter, buffLen
+Valid: True
+Reason: Variable names follow the specified camel case style.
+
+Title: Constant names like this: MAX_SIZE
+Valid: True
+Reason: Constant names follow the specified uppercase style.
+
+Title: No types in names
+Valid: True
+Reason: The code does not include type information in names.
+
+Title: Build without warnings
+Valid: True
+Reason: The code does not show any build warnings, but this cannot be fully validated without compiling the code.
+
+Title: Comment must be written like this: /* ... */
+Valid: True
+Reason: Comments use the correct /* ... */ style.
+
+Title: K&R {} for if statement
+Valid: True
+Reason: The if statements follow the K&R brace style.
+
+Title: Function {} always like this
+Valid: True
+Reason: Function braces follow the specified style.
+
+Title: Avoid gotos
+Valid: True
+Reason: The code does not use goto statements.
+
+Title: Keep functions to 100 lines unless necessary
+Valid: True
+Reason: Functions in the provided code are within 100 lines.
+
+Title: Pattern matching like this: switch (val)
+Valid: True
+Reason: The switch statement follows the specified pattern, including FALL_THROUGH where appropriate.

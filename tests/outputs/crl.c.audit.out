@@ -1,0 +1,123 @@
+Title: Potential memory leak in InitCRL_Entry
+Type: Resource leak Bug
+Suggestion: In the function InitCRL_Entry, if the allocation for crle->sigParams fails, the previously allocated memory for crle->toBeSigned and
+crle->signature is not freed, leading to a memory leak. The improved code adds checks to free the allocated memory if subsequent allocations fail.
+  in  /Users/qwertyrockson/wolfssl/src/crl.c
+From:
+  95 static int InitCRL_Entry(CRL_Entry* crle, DecodedCRL* dcrl, const byte* buff,
+  96                           int verified, void* heap)
+  97 {
+  98     ...
+  99 }
+Into:
+     static int InitCRL_Entry(CRL_Entry* crle, DecodedCRL* dcrl, const byte* buff,
+                               int verified, void* heap)
+     {
+         ...
+         if (crle->toBeSigned == NULL || crle->signature == NULL
+     #ifdef WC_RSA_PSS
+             || (dcrl->sigParamsLength > 0 && crle->sigParams == NULL)
+     #endif
+         ) {
+             if (crle->toBeSigned != NULL)
+                 XFREE(crle->toBeSigned, heap, DYNAMIC_TYPE_CRL_ENTRY);
+             if (crle->signature != NULL)
+                 XFREE(crle->signature, heap, DYNAMIC_TYPE_CRL_ENTRY);
+     #ifdef WC_RSA_PSS
+             if (crle->sigParams != NULL)
+                 XFREE(crle->sigParams, heap, DYNAMIC_TYPE_CRL_ENTRY);
+     #endif
+             return -1;
+         }
+         ...
+     }
+
+
+Title: Potential memory leak in CRL_Entry_free
+Type: Resource leak Bug
+Suggestion: In the function CRL_Entry_free, the memory allocated for crle->issuer is not freed when OPENSSL_EXTRA is defined. The improved code adds the
+necessary cleanup code to free the memory allocated for crle->issuer.
+  in  /Users/qwertyrockson/wolfssl/src/crl.c
+From:
+  203 static void CRL_Entry_free(CRL_Entry* crle, void* heap)
+  204 {
+  205     ...
+  206     if (crle->signature != NULL)
+  207         XFREE(crle->signature, heap, DYNAMIC_TYPE_CRL_ENTRY);
+  208     if (crle->toBeSigned != NULL)
+  209         XFREE(crle->toBeSigned, heap, DYNAMIC_TYPE_CRL_ENTRY);
+  210 #ifdef WC_RSA_PSS
+  211     if (crle->sigParams != NULL)
+  212         XFREE(crle->sigParams, heap, DYNAMIC_TYPE_CRL_ENTRY);
+  213 #endif
+  214     ...
+  215 }
+Into:
+      static void CRL_Entry_free(CRL_Entry* crle, void* heap)
+      {
+          ...
+          if (crle->signature != NULL)
+              XFREE(crle->signature, heap, DYNAMIC_TYPE_CRL_ENTRY);
+          if (crle->toBeSigned != NULL)
+              XFREE(crle->toBeSigned, heap, DYNAMIC_TYPE_CRL_ENTRY);
+      #ifdef WC_RSA_PSS
+          if (crle->sigParams != NULL)
+              XFREE(crle->sigParams, heap, DYNAMIC_TYPE_CRL_ENTRY);
+      #endif
+      #ifdef OPENSSL_EXTRA
+          if (crle->issuer != NULL) {
+              FreeX509Name(crle->issuer);
+              XFREE(crle->issuer, heap, DYNAMIC_TYPE_X509);
+          }
+      #endif
+          wc_FreeMutex(&crle->verifyMutex);
+          XFREE(crle, heap, DYNAMIC_TYPE_CRL_ENTRY);
+          ...
+      }
+
+
+Title: Potential memory leak in BufferLoadCRL
+Type: Resource leak Bug
+Suggestion: In the function BufferLoadCRL, the memory allocated for 'der' is not freed in all paths, leading to a memory leak. The improved code ensures that
+'der' is freed before returning from the function.
+  in  /Users/qwertyrockson/wolfssl/src/crl.c
+From:
+  597 int BufferLoadCRL(WOLFSSL_CRL* crl, const byte* buff, long sz, int type,
+  598                    int verify)
+  599 {
+  600     ...
+  601     crl->currentEntry = CRL_Entry_new(crl->heap);
+  602     if (crl->currentEntry == NULL) {
+  603         WOLFSSL_MSG("alloc CRL Entry failed");
+  604     #ifdef WOLFSSL_SMALL_STACK
+  605         XFREE(dcrl, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+  606     #endif
+  607         FreeDer(&der);
+  608         return MEMORY_E;
+  609     }
+  610     ...
+  611 }
+Into:
+      int BufferLoadCRL(WOLFSSL_CRL* crl, const byte* buff, long sz, int type,
+                         int verify)
+      {
+          ...
+          crl->currentEntry = CRL_Entry_new(crl->heap);
+          if (crl->currentEntry == NULL) {
+              WOLFSSL_MSG("alloc CRL Entry failed");
+          #ifdef WOLFSSL_SMALL_STACK
+              XFREE(dcrl, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+          #endif
+              FreeDer(&der);
+              return MEMORY_E;
+          }
+          ...
+          FreeDer(&der);
+          return ret ? ret : WOLFSSL_SUCCESS; /* convert 0 to WOLFSSL_SUCCESS */
+      }
+
+
+Summary
+Detected potential memory leaks in the functions InitCRL_Entry, CRL_Entry_free, and BufferLoadCRL. These leaks occur when memory allocations fail and
+previously allocated memory is not freed before returning from the function. The provided suggestions include improved code that adds the necessary cleanup
+code to prevent memory leaks.

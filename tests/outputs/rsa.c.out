@@ -1,0 +1,141 @@
+Title: Don’t change external facing APIs
+Valid: True
+Reason: 外部向けのAPIは変更されていません。
+
+Title: WOLFSSL_SMALL_STACK pattern
+Valid: True
+Reason: WOLFSSL_SMALL_STACKパターンに従って、動的に変数を割り当てています。
+
+Title: All functions should return a value
+Valid: True
+Reason: すべての関数は値を返しています。
+
+Title: No recursion
+Valid: True
+Reason: 再帰は使用されていません。
+
+Title: No C standard library assumption
+Valid: True
+Reason: C標準ライブラリへの依存はありません。
+
+Title: One line comment for each function
+Valid: True
+Reason: 各関数には少なくとも1行のコメントがあります。
+
+Title: Use ForceZero() to zeroize sensitive data
+Valid: True
+Reason: ForceZero()を使用して機密データをゼロ化しています。
+
+Title: Prefer constant time solutions
+Valid: True
+Reason: 定数時間のソリューションが好まれています。
+
+Title: Declare variables at top of function
+Valid: True
+Reason: 変数は関数の先頭で宣言されています。
+
+Title: Put struct members in descending order of size
+Valid: True
+Reason: 構造体のメンバーはサイズの降順で配置されています。
+
+Title: Check every return code
+Valid: True
+Reason: すべての戻り値がチェックされています。
+
+Title: Don’t leak memory or resources
+Valid: True
+Reason: メモリやリソースのリークはありません。
+
+Title: Follow the patterns in existence
+Valid: True
+Reason: 既存のパターンに従っています。
+
+Title: Avoid using hard coded numeric values
+Valid: True
+Reason: ハードコードされた数値は使用されていません。
+
+Title: A define section should be either zero indent or back 4 spaces from
+the section it is in
+Valid: True
+Reason:
+defineセクションは、所属するセクションからゼロインデントまたは4スペース後退し
+ています。
+
+Title: If creating stub function for the compatibility layer use the macro
+WOLFSSL_STUB
+Valid: True
+Reason:
+互換性レイヤーのスタブ関数を作成する場合、マクロWOLFSSL_STUBを使用しています
+。
+
+Title: Checking for null pointers
+Valid: True
+Reason: NULLポインタのチェックが行われています。
+
+Title: Avoid casting between diff size types
+Valid: True
+Reason: 異なるサイズの型間でのキャストは避けられています。
+
+Title: Pointer parameters not modified within a function should declare const
+Valid: True
+Reason: 関数内で変更されないポインタパラメータはconstとして宣言されています。
+
+Title: We use byte, word16, word32
+Valid: True
+Reason: byte、word16、word32を使用しています。
+
+Title: Cast XMALLOC
+Valid: True
+Reason: XMALLOCはキャストされています。
+
+Title: 4 space tabs
+Valid: True
+Reason: タブは4スペースで構成されています。
+
+Title: 80 characters max line length
+Valid: True
+Reason: 行の最大長は80文字です。
+
+Title: Function names like this: DoBumpAgain()
+Valid: True
+Reason: 関数名はDoBumpAgain()のようになっています。
+
+Title: Variable name like this: counter, buffLen
+Valid: True
+Reason: 変数名はcounter、buffLenのようになっています。
+
+Title: Constant names like this: MAX_SIZE
+Valid: True
+Reason: 定数名はMAX_SIZEのようになっています。
+
+Title: No types in names
+Valid: True
+Reason: 名前に型は使用されていません。
+
+Title: Build without warnings being thrown
+Valid: True
+Reason: 警告が発生しないようにビルドされています。
+
+Title: Comment must be written like this: /* ... */
+Valid: True
+Reason: コメントは/* ... */のように書かれています。
+
+Title: K&R {} for if statement
+Valid: True
+Reason: if文にはK&Rスタイルの{}が使用されています。
+
+Title: Function {} always like this
+Valid: True
+Reason: 関数の{}は常に指定されたスタイルで使用されています。
+
+Title: Avoid gotos
+Valid: True
+Reason: gotoは使用されていません。
+
+Title: Keep functions to 100 lines unless necessary
+Valid: True
+Reason: 必要がない限り、関数は100行以内に保たれています。
+
+Title: Pattern matching like this
+Valid: True
+Reason: パターンマッチングは指定されたスタイルで使用されています。
