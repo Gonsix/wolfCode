@@ -38,7 +38,7 @@ rules = [
     "Avoid casting between diff size types. It is okay to use size_t to identify a pointer size.",
 
     "Pointer parameters not modified within a function should declare const. Example: `const void *ptr`.",
-
+    
     "We use byte, word16, word32 (not the stdint types uint32_t).",
 
     "Cast XMALLOC. byte* var = (byte*)XMALLOC(size, NULL, DYN);", 

@@ -3,17 +3,39 @@ from dynaconf import Dynaconf
 
 from wolfcode.definitions import ROOT_DIR
 
-settings = Dynaconf(
-    envvar_prefix="DYNACONF",
-    settings_files=[join(ROOT_DIR, f) for f in [
-        'wolfcode/settings/check_coding_standards_config.toml',
-    ]]
-)
 
 
 coding_rules = Dynaconf(
     envvar_prefix="DYNACONF",
     settings_files=[join(ROOT_DIR, f) for f in [
-        'wolfcode/settings/coding_standards.toml',
+        'wolfcode/settings/wolfssl_coding_standards.toml',
     ]]
 )
+
+def load_default(relative_path: str)->Dynaconf:
+    """
+    This function returns Dynaconf settings from relative path from the project root.
+    """
+    settings = Dynaconf(
+        envvar_prefix="DYNACONF",
+        settings_files=[join(ROOT_DIR, f) for f in [
+           relative_path,
+        ]]
+    )
+
+    return settings
+
+
+def load_config(config_path: str)-> Dynaconf:
+    """
+    This function returns Dynaconf settings from config_path    
+    """
+    settings = Dynaconf(
+        envvar_prefix="DYNACONF",
+        settings_files=[
+            config_path
+        ]
+    )
+    return settings
+
+

@@ -8,6 +8,7 @@ Follow these guidelines
 - Include the File name and the line number of the subject source code in your descriptions.
 - Please answer in {language} for all descriptions.
 - You may refer to the Coding standards document that we provide, but you should prefer what is written in the description of each validation item over the Coding standards document.
+- Do not add line numbers when providing code blocks
 
 wolfSSL Coding Standards:
 =====                                          
@@ -28,7 +29,7 @@ Example Code chunks:
 ...
 ======
                         
-NOTE: You don't need to answer to unclear validation items if you are not sure. In that case, you should answer None instead of True or False.
+NOTE: You don't need to answer to unclear validation items. In that case, you should answer None instead of True or False.
 
 About output format:
 {format_instruction}
@@ -49,7 +50,7 @@ output_model_path="pr_review/ouput_schemas/CodingStandargReview.py"
 # Variables not specified here must be completed in the program e.g, {code_chunks}, {format_instruciton}.
 [variables]
 extra_instruction=""""""
-language="Japanese"
+language="English"
 
 
 
